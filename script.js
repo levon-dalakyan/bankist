@@ -78,10 +78,18 @@ const displayMovements = function (movements) {
         containerMovements.insertAdjacentHTML('afterbegin', html);
     });
 };
-
 displayMovements(account1.movements);
 
-console.log(containerMovements.innerHTML);
+const createUsernames = function (accs) {
+    accs.forEach(function (acc) {
+        acc.username = acc.owner
+            .toLowerCase()
+            .split(' ')
+            .map(w => w[0])
+            .join('');
+    });
+};
+createUsernames(accounts);
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
