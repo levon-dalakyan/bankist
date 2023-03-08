@@ -87,13 +87,15 @@ const calcDisplayBalance = function (movements) {
 calcDisplayBalance(account1.movements);
 
 const calcDisplaySummary = function (movements) {
-    const incomes = movements.filter(m => m > 0).reduce((acc, m) => acc + m, 0);
-    labelSumIn.textContent = `${incomes}€`;
+    const income = movements
+        .filter(mov => mov > 0)
+        .reduce((acc, mov) => acc + mov, 0);
+    labelSumIn.textContent = `${income}€`;
 
-    const outcomes = movements
-        .filter(m => m < 0)
-        .reduce((acc, m) => acc + m, 0);
-    labelSumOut.textContent = `${outcomes}€`;
+    const outcome = movements
+        .filter(mov => mov < 0)
+        .reduce((acc, mov) => acc + mov, 0);
+    labelSumOut.textContent = `${outcome}€`;
 };
 calcDisplaySummary(account1.movements);
 
