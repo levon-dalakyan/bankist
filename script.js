@@ -78,33 +78,30 @@ const displayMovements = function (movements) {
         containerMovements.insertAdjacentHTML('afterbegin', html);
     });
 };
-displayMovements(account1.movements);
 
 const calcDisplayBalance = function (movements) {
     const balance = movements.reduce((acc, mov) => acc + mov, 0);
     labelBalance.textContent = balance + '€';
 };
-calcDisplayBalance(account1.movements);
 
-const calcDisplaySummary = function (movements) {
-    const income = movements
+const calcDisplaySummary = function (acc) {
+    const income = acc.movements
         .filter(mov => mov > 0)
         .reduce((acc, mov) => acc + mov, 0);
     labelSumIn.textContent = `${income}€`;
 
-    const outcome = movements
+    const outcome = acc.movements
         .filter(mov => mov < 0)
         .reduce((acc, mov) => acc + mov, 0);
     labelSumOut.textContent = `${Math.abs(outcome)}€`;
 
-    const interest = movements
+    const interest = acc.movements
         .filter(mov => mov > 0)
-        .map(deposit => (deposit * 1.2) / 100)
+        .map(deposit => (deposit * acc.interestRate) / 100)
         .filter(int => int >= 1)
         .reduce((acc, int) => acc + int, 0);
     labelSumInterest.textContent = `${interest}€`;
 };
-calcDisplaySummary(account1.movements);
 
 const createUsernames = function (accs) {
     accs.forEach(function (acc) {
@@ -116,6 +113,31 @@ const createUsernames = function (accs) {
     });
 };
 createUsernames(accounts);
+
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    currentAccount = accounts.find(
+        acc => acc.username === inputLoginUsername.value
+    );
+
+    if (currentAccount?.pin === Number(inputLoginPin.value)) {
+        labelWelcome.textContent = `Welcome, ${
+            currentAccount.owner.split(' ')[0]
+        }!`;
+
+        displayMovements(currentAccount.movements);
+        calcDisplayBalance(currentAccount.movements);
+        calcDisplaySummary(currentAccount);
+
+        containerApp.style.opacity = 1;
+
+        inputLoginUsername.value = inputLoginPin.value = '';
+        inputLoginPin.blur();
+    }
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
