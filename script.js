@@ -85,6 +85,12 @@ const updateUI = function (acc) {
     calcDisplaySummary(acc);
 };
 
+const clearUI = function () {
+    containerApp.style.opacity = 0;
+
+    labelWelcome.textContent = 'Log in to get started';
+};
+
 const calcDisplayBalance = function (acc) {
     acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
     labelBalance.textContent = acc.balance + '€';
@@ -165,6 +171,25 @@ btnTransfer.addEventListener('click', function (e) {
 
         updateUI(currentAccount);
     }
+});
+
+btnClose.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    if (
+        currentAccount.username === inputCloseUsername.value &&
+        currentAccount.pin === Number(inputClosePin.value)
+    ) {
+        const index = accounts.findIndex(
+            acc => acc.username === currentAccount.username
+        );
+        accounts.splice(index, 1);
+
+        clearUI();
+    }
+
+    inputCloseUsername.value = inputClosePin.value = '';
+    inputClosePin.blur();
 });
 
 /////////////////////////////////////////////////
